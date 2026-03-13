@@ -1,0 +1,822 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THEME TOKEN SYSTEM — DARK (default)
+   ============================================================ */
+:root,
+[data-theme="dark"] {
+  --bg-base:     #080808;
+  --bg-surface:  #0F0F0F;
+  --bg-elevated: #161616;
+  --bg-card:     rgba(255, 255, 255, 0.03);
+
+  --text-primary:   #F2EDE6;
+  --text-secondary: #8C8680;
+  --text-muted:     #54514E;
+
+  --accent:      #C9A97A;
+  --accent-dim:  rgba(201, 169, 122, 0.12);
+  --accent-glow: rgba(201, 169, 122, 0.45);
+
+  --border:       rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.13);
+
+  --orb-1: #3B0764;
+  --orb-2: #7C2D52;
+  --orb-3: #92400E;
+  --orb-4: #0F172A;
+
+  --marquee-bg: #0F0F0F;
+  --marquee-border: rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================================
+   THEME TOKENS — LIGHT
+   ============================================================ */
+[data-theme="light"] {
+  --bg-base:     #FDF8F5;
+  --bg-surface:  #F5EEE9;
+  --bg-elevated: #EDE6E0;
+  --bg-card:     rgba(232, 115, 154, 0.05);
+
+  --text-primary:   #1A1412;
+  --text-secondary: #6B5E58;
+  --text-muted:     #B0A49E;
+
+  --accent:      #D4547A;
+  --accent-dim:  rgba(212, 84, 122, 0.1);
+  --accent-glow: rgba(212, 84, 122, 0.45);
+
+  --border:       rgba(140, 80, 100, 0.12);
+  --border-hover: rgba(140, 80, 100, 0.22);
+
+  --orb-1: #FBCFE8;
+  --orb-2: #F9A8D4;
+  --orb-3: #FDE68A;
+  --orb-4: #E9D5FF;
+
+  --marquee-bg: #F5EEE9;
+  --marquee-border: rgba(140, 80, 100, 0.1);
+}
+
+/* ============================================================
+   THEME TRANSITION (only during theme toggle)
+   ============================================================ */
+[data-theme-transition="true"] *,
+[data-theme-transition="true"] *::before,
+[data-theme-transition="true"] *::after {
+  transition:
+    background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.35s ease !important;
+}
+
+/* ============================================================
+   TAILWIND V4 CUSTOM TOKENS
+   ============================================================ */
+@theme inline {
+  --font-display:     var(--font-cormorant);
+  --font-sans:        var(--font-dm-sans);
+  --font-mono-accent: var(--font-space-mono);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+button,
+input,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   GRAIN TEXTURE OVERLAY
+   ============================================================ */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 150px 150px;
+  mix-blend-mode: overlay;
+  animation: grainShift 0.4s steps(1) infinite;
+}
+
+@keyframes grainShift {
+  0%   { background-position: 0px 0px; }
+  10%  { background-position: -5px -10px; }
+  20%  { background-position: -15px 5px; }
+  30%  { background-position: 7px -25px; }
+  40%  { background-position: 20px 25px; }
+  50%  { background-position: -25px 10px; }
+  60%  { background-position: 15px 5px; }
+  70%  { background-position: 0px 15px; }
+  80%  { background-position: 25px 35px; }
+  90%  { background-position: -10px 10px; }
+  100% { background-position: 0px 0px; }
+}
+
+/* ============================================================
+   FLOATING ORB ANIMATIONS
+   ============================================================ */
+@keyframes float1 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  33%  { transform: translate(40px, -60px) scale(1.06); }
+  66%  { transform: translate(-30px, 40px) scale(0.96); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+@keyframes float2 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  50%  { transform: translate(-50px, 70px) scale(1.09); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+@keyframes float3 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  40%  { transform: translate(60px, -40px) scale(0.94); }
+  80%  { transform: translate(-40px, 50px) scale(1.04); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+@keyframes float4 {
+  0%   { transform: translate(0px, 0px); }
+  25%  { transform: translate(-70px, -50px); }
+  75%  { transform: translate(50px, 35px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+@keyframes marqueeLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes marqueeRight {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeLeft 35s linear infinite;
+  will-change: transform;
+}
+.marquee-track-reverse {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 28s linear infinite;
+  will-change: transform;
+}
+.marquee-track:hover,
+.marquee-track-reverse:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================================
+   SHIMMER BUTTON
+   ============================================================ */
+@keyframes shimmerSweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--accent);
+  color: var(--bg-base);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              background-color 0.3s ease;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-position: -200% center;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.btn-primary:hover::after {
+  opacity: 1;
+  animation: shimmerSweep 0.7s ease forwards;
+}
+.btn-primary:hover {
+  box-shadow: 0 0 40px var(--accent-glow), 0 4px 20px rgba(0,0,0,0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+.btn-primary:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* ============================================================
+   GLASS CARD
+   ============================================================ */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.glass-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px var(--border-hover);
+  transform: translateY(-4px);
+}
+
+/* ============================================================
+   INPUT GLOW
+   ============================================================ */
+.input-glow {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+}
+.input-glow:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim), 0 0 20px var(--accent-glow);
+}
+.input-glow::placeholder {
+  color: var(--text-muted);
+}
+
+/* keyboard accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   TEXT UTILITIES
+   ============================================================ */
+.font-display {
+  font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+}
+.font-mono-accent {
+  font-family: var(--font-space-mono), 'Space Mono', 'Courier New', monospace;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 60%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-accent { color: var(--accent); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+
+/* ============================================================
+   SECTION DIVIDER LINE
+   ============================================================ */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 999px; }
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: var(--accent-dim);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   COUNTER ANIMATION
+   ============================================================ */
+@keyframes countPulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.count-pulse {
+  animation: countPulse 0.3s ease;
+}
+
+/* ============================================================
+   HOVER UNDERLINE DRAW
+   ============================================================ */
+.link-draw {
+  position: relative;
+  text-decoration: none;
+}
+.link-draw::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.link-draw:hover::after { width: 100%; }
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ============================================================
+   STEP CONNECTOR
+   ============================================================ */
+@keyframes progressLine {
+  from { scaleY: 0; }
+  to   { scaleY: 1; }
+}
+
+/* ============================================================
+   THANK YOU PAGE — CONFETTI-ISH ENTRANCE
+   ============================================================ */
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise-up {
+  animation: riseUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   RESPONSIVE UTILITIES
+   ============================================================ */
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .marquee-track {
+    animation-duration: 20s;
+  }
+  .marquee-track-reverse {
+    animation-duration: 16s;
+  }
+}
+
+@media (min-width: 769px) {
+  .hidden-mobile {
+    display: flex;
+  }
+}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+.theme-toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.4s ease, border-color 0.4s ease;
+  flex-shrink: 0;
+}
+.theme-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+[data-theme="light"] .theme-toggle-thumb {
+  transform: translateX(20px);
+}
+
+/* ============================================================
+   HERO BADGE SHIMMER BORDER
+   ============================================================ */
+@keyframes borderShimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero-badge {
+  position: relative;
+}
+.hero-badge::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 999px;
+  padding: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent, var(--accent), transparent);
+  background-size: 300% 300%;
+  animation: borderShimmer 4s ease infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ============================================================
+   LIGHT MODE — SECTION BACKGROUNDS
+   ============================================================ */
+[data-theme="light"] .section-alt {
+  background: linear-gradient(135deg, #FDF8F5 0%, #F5EEE9 50%, #FBEAF2 100%);
+}
+
+[data-theme="light"] .glass-card {
+  border-color: rgba(212, 84, 122, 0.15);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="light"] .glass-card:hover {
+  border-color: rgba(212, 84, 122, 0.3);
+  box-shadow: 0 8px 40px rgba(212, 84, 122, 0.1), 0 0 0 1px rgba(212, 84, 122, 0.2);
+}
+
+/* ============================================================
+   TYPOGRAPHY POLISH
+   ============================================================ */
+
+/* Ensure display font has proper rendering */
+.font-display {
+  font-variant-ligatures: common-ligatures;
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Large number tabular */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ============================================================
+   CURSOR — HIDE NATIVE GLOBALLY WHEN CUSTOM IS ACTIVE
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) {
+  body.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* ============================================================
+   SECTION TRANSITIONS — Smooth appearance
+   ============================================================ */
+section {
+  position: relative;
+}
+
+/* ============================================================
+   PRODUCT PREVIEW — PHONE GLOW
+   ============================================================ */
+@keyframes phoneGlow {
+  0%, 100% { opacity: 0.15; }
+  50%       { opacity: 0.3; }
+}
+.phone-glow {
+  animation: phoneGlow 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   MANIFESTO — LARGE TEXT OVERRIDE
+   ============================================================ */
+.manifesto-text {
+  font-variant-ligatures: discretionary-ligatures;
+  font-feature-settings: "dlig" 1, "kern" 1;
+}
+
+/* ============================================================
+   FOOTER LIGHT MODE
+   ============================================================ */
+[data-theme="light"] footer {
+  background: #F5EEE9;
+  border-color: rgba(140, 80, 100, 0.1);
+}
+
+/* ============================================================
+   @PROPERTY — ANIMATED GRADIENT BORDER (modern browsers)
+   ============================================================ */
+@property --glow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes borderSpin {
+  to { --glow-angle: 360deg; }
+}
+
+/* Spinning conic border on hover */
+.card-border-glow {
+  position: relative;
+  isolation: isolate;
+}
+.card-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--glow-angle),
+    var(--accent) 0deg,
+    transparent 50deg,
+    transparent 310deg,
+    var(--accent) 360deg
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.card-border-glow::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: calc(inherit - 1px);
+  background: var(--bg-card);
+  z-index: -1;
+}
+.card-border-glow:hover::before {
+  opacity: 1;
+  animation: borderSpin 3s linear infinite;
+}
+
+/* ============================================================
+   ANIMATED GRADIENT TEXT
+   ============================================================ */
+@keyframes gradientTextShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.text-gradient-animate {
+  background: linear-gradient(
+    135deg,
+    var(--text-primary) 0%,
+    var(--accent) 30%,
+    var(--text-primary) 60%,
+    var(--accent) 90%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientTextShift 5s ease infinite;
+}
+
+/* ============================================================
+   DOT GRID BACKGROUND
+   ============================================================ */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--border-hover) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.dot-grid-dense {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ============================================================
+   LINE GRID BACKGROUND
+   ============================================================ */
+.line-grid {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ============================================================
+   GLOW RING — decorative SVG spinner placeholder
+   ============================================================ */
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes slowSpinReverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+.spin-slow {
+  animation: slowSpin 20s linear infinite;
+}
+.spin-reverse {
+  animation: slowSpinReverse 28s linear infinite;
+}
+
+/* ============================================================
+   SECTION FADE EDGE — gradient mask for section tops/bottoms
+   ============================================================ */
+.fade-edge-top::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-base), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+.fade-edge-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to top, var(--bg-base), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   ARC STAT — SVG ring behind stats
+   ============================================================ */
+.arc-stat-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   NOISE TEXTURE OVERLAY — subtle per-section
+   ============================================================ */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+}
+
+/* ============================================================
+   FLOATING CTA safe area
+   ============================================================ */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .floating-cta-wrap {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* ============================================================
+   CARD HOVER LIFT + GLOW
+   ============================================================ */
+.card-hover {
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s ease,
+    border-color 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.25), 0 0 0 1px var(--border-hover);
+  border-color: var(--border-hover);
+}
+
+/* ============================================================
+   QUOTE — large italic accent
+   ============================================================ */
+.quote-accent {
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(18px, 2.2vw, 28px);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+}
+.quote-accent strong {
+  color: var(--accent);
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* ============================================================
+   SHINE SWEEP — one-time shimmer on element entry
+   ============================================================ */
+@keyframes shineSweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(300%) skewX(-15deg); }
+}
+.shine-on-enter {
+  overflow: hidden;
+  position: relative;
+}
+.shine-on-enter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  width: 40%;
+  animation: shineSweep 0.9s ease 0.3s both;
+}
+
+/* ============================================================
+   STAT NUMBER SHIMMER
+   ============================================================ */
+@keyframes statPop {
+  0%   { transform: scale(0.85); opacity: 0; filter: blur(8px); }
+  60%  { transform: scale(1.04); opacity: 1; filter: blur(0px); }
+  100% { transform: scale(1); }
+}
+.stat-pop {
+  animation: statPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ============================================================
+   MOBILE IMPROVEMENTS
+   ============================================================ */
+@media (max-width: 480px) {
+  .hide-xs {
+    display: none !important;
+  }
+}
+
+/* motion/accessibility fallback */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
